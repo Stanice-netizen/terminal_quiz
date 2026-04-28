@@ -3,15 +3,21 @@
 QUESTIONS_FILE="questions.txt"    
 SCORES_FILE="Highscores"         
 MAX_QUESTIONS=15                 
-PASS_PERCENT=50  
-result=$(cat "Highscores")
+PASS_PERCENT=50 
 
 mode_arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
 if [ "$mode_arg" = "highscores" ]; then
   clear
-  echo "HIGHSCORES: "
-  echo "$result"
+  echo "TOP 5 HIGHSCORES: "
+  echo "=========================================================="
+  tail -n +2 "$SCORES_FILE" \
+    | sort -t',' -k2 -rn \
+    | head -5 \
+    | awk -F',' '{
+        rank = NR "."
+        printf "  %-5s %-20s %-8s %-6s %s\n", rank, $1, $2"/"$3, $4, $5
+    }'
   exit 0
 
 elif [ "$mode_arg" = "practice" ]; then
